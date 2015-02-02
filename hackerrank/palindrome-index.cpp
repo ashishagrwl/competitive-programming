@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ int main() {
     while (t--) {
         int i = 0;
         char input[100006];
-        getline(cin, input);
+        cin.getline(input, 100005);
         int far_index = strlen(input) - 1;
         half_index = (far_index - 1) / 2;
         for (; i <= half_index; i++) {
