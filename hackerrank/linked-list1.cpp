@@ -4,17 +4,17 @@
 #include <stack>
 using namespace std;
 
-struct Node {
+struct listNode {
     int data;
-    Node *next;
+    listNode *next;
 };
 
 
 // get-the-value-of-the-node-at-a-specific-position-from-the-tail
 
-int GetNode(Node *head,int positionFromTail) {
-    Node *target = head;
-    Node *last = target;
+int GetlistNode(listNode *head,int positionFromTail) {
+    listNode *target = head;
+    listNode *last = target;
     while (positionFromTail--) {
         last = last->next;
     }
@@ -27,10 +27,10 @@ int GetNode(Node *head,int positionFromTail) {
 
 // delete-duplicate-value-nodes-from-a-sorted-linked-list
 
-Node* RemoveDuplicates(Node *head) {
+listNode* RemoveDuplicates(listNode *head) {
     if (NULL == head)
         return head;
-    Node* unique = head;
+    listNode* unique = head;
     while (unique) {
         while (unique->next && unique->data == unique->next->data) {
             unique->next = unique->next->next;
@@ -42,7 +42,7 @@ Node* RemoveDuplicates(Node *head) {
 
 // compare-two-linked-lists
 
-int CompareLists(Node *headA, Node* headB) {
+int CompareLists(listNode *headA, listNode* headB) {
     while (headA && headB) {
         if (headA->data != headB->data)
             break;
@@ -59,8 +59,8 @@ int CompareLists(Node *headA, Node* headB) {
 
 // Insert at head
 
-// Node* Insert(Node *head,int data) {
-//   Node* temp = new Node;
+// listNode* Insert(listNode *head,int data) {
+//   listNode* temp = new listNode;
 //   temp->data = data;
 //   temp->next = head;
 //   return temp;
@@ -68,9 +68,9 @@ int CompareLists(Node *headA, Node* headB) {
 
 // Insert at tail
 
-Node* Insert(Node *head,int data) {
-    Node *iter = head;
-    Node *temp = new Node;
+listNode* Insert(listNode *head,int data) {
+    listNode *iter = head;
+    listNode *temp = new listNode;
     temp->data = data;
     temp->next = NULL;
     if (!head)
@@ -83,9 +83,9 @@ Node* Insert(Node *head,int data) {
 
 // find-the-merge-point-of-two-joined-linked-lists
 
-int FindMergeNode(Node *headA, Node *headB) {
+int FindMergelistNode(listNode *headA, listNode *headB) {
     int countA = 0, countB = 0, diff = 0;
-    Node *temp = headA;
+    listNode *temp = headA;
     while (temp) {
         countA++;
         temp = temp->next;
@@ -97,7 +97,7 @@ int FindMergeNode(Node *headA, Node *headB) {
     }
     diff = (countA>countB)?(countA-countB):(countB-countA);
     temp = (countA>countB)?headA:headB;
-    Node* temp2 = (countA>countB)?headB:headA;
+    listNode* temp2 = (countA>countB)?headB:headA;
     while (diff--) {
         temp = temp->next;
     }
@@ -112,9 +112,9 @@ int FindMergeNode(Node *headA, Node *headB) {
 
 // detect-whether-a-linked-list-contains-a-cycle
 
-int HasCycle(Node* head) {
-    Node* slow = head;
-    Node* fast = head;
+int HasCycle(listNode* head) {
+    listNode* slow = head;
+    listNode* fast = head;
     while (fast && fast->next) {
         slow = slow->next;
         fast = fast->next->next;
@@ -126,7 +126,7 @@ int HasCycle(Node* head) {
 
 // print-the-elements-of-a-linked-list-in-reverse
 
-void ReversePrint(Node *head) {
+void ReversePrint(listNode *head) {
     if (!head)
         return;
     ReversePrint(head->next);
@@ -134,24 +134,39 @@ void ReversePrint(Node *head) {
 }
 
 // reverse-a-linked-list
-
-Node* Reverse(Node *head) {
-    int count=0;
-    stack<Node*> st;
-    Node* temp = head;
-    if (!temp || !temp->next)
-        return temp;
-    while (temp) {
-        s.push(temp);
-        temp = temp->next;
-        count++;
+//  recursive
+listNode* reverseList (listNode* curr, listNode* prev=NULL) {
+    if (!curr->next) {
+        curr->next = prev;
+        return curr;
     }
-    count/=2;
-    
+    listNode* _next = curr->next;
+    curr->next = prev;
+    return reverseList (_next, curr);
+}
+void doReverseList (listNode** head) {
+    if (!head)
+        return;
+    *head = reverseList(*head);
 }
 
-Node* Delete(Node *head, int position) {
-    Node *temp = head;
+//  iterative
+listNode* Reverse(listNode* head) {
+    if (!head)
+        return NULL;
+    listNode* curr = head, *prev = NULL;
+    while (curr->next) {
+        listNode* next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    curr->next = prev;
+    return curr;
+}
+
+listNode* Delete(listNode *head, int position) {
+    listNode *temp = head;
     if (0 == position) {
         delete head;
         return temp->next;
@@ -160,14 +175,14 @@ Node* Delete(Node *head, int position) {
     while (position--) {
         temp = temp->next;
     }
-    Node *temp2 = temp->next;
+    listNode *temp2 = temp->next;
     temp->next = temp->next->next;
     delete temp2;
     return head;
 }
 
 
-void Print(Node *head) {
+void Print(listNode *head) {
     bool ok = false;
     while(head != NULL)
     {
@@ -178,14 +193,14 @@ void Print(Node *head) {
     }
 }
 
-Node* Push(Node *head,int x) {
-   Node *temp = new Node();
+listNode* Push(listNode *head,int x) {
+   listNode *temp = new listNode();
    temp->data = x;
    temp->next = NULL;
    if(head == NULL) {
        return temp;
    }
-   Node *temp1;
+   listNode *temp1;
    for(temp1 = head;temp1->next!=NULL;temp1= temp1->next);
    temp1->next = temp;return head;
 }
@@ -194,17 +209,19 @@ int main() {
     int t;
     cin>>t;
     while(t--) {
-        Node *A = NULL;
-        int m;cin>>m;
-        while(m--) {
+        listNode *head = NULL;
+        while(true) {
             int x;
             cin>>x;
-            A = Push(A,x);
+            if (-1 == x)
+                break;
+            head = Push(head,x);
         }
         // int n;cin>>n;
-        // cout<<GetNode(A,n)<<"\n";
+        // cout<<GetlistNode(A,n)<<"\n";
         //RemoveDuplicates(A);
-        ReversePrint(A);
-        Print(A);
+        Print(head);
+        head = Reverse(head);
+        Print(head);
     }
 }
