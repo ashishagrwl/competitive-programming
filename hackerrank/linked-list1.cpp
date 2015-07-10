@@ -9,6 +9,12 @@ struct listNode {
     listNode *next;
 };
 
+struct dListNode {
+    int data;
+    dListNode *next;
+    dListNode *prev;
+};
+
 
 // get-the-value-of-the-node-at-a-specific-position-from-the-tail
 
@@ -191,6 +197,19 @@ void Print(listNode *head) {
         cout<<head->data;
         head = head->next;
     }
+    cout << '\n';
+}
+
+void Print (dListNode *head) {
+    bool ok = false;
+    while(head != NULL)
+    {
+        if(ok)cout<<" ";
+        else ok = true;
+        cout<<head->data;
+        head = head->next;
+    }
+    cout << '\n';
 }
 
 listNode* Push(listNode *head,int x) {
@@ -205,23 +224,124 @@ listNode* Push(listNode *head,int x) {
    temp1->next = temp;return head;
 }
 
-int main() {
-    int t;
-    cin>>t;
-    while(t--) {
-        listNode *head = NULL;
-        while(true) {
-            int x;
-            cin>>x;
-            if (-1 == x)
-                break;
-            head = Push(head,x);
-        }
-        // int n;cin>>n;
-        // cout<<GetlistNode(A,n)<<"\n";
-        //RemoveDuplicates(A);
-        Print(head);
-        head = Reverse(head);
-        Print(head);
+// insert-a-node-at-a-specific-position-in-a-linked-list
+listNode* InsertNth(listNode *head, int data, int position) {
+    listNode* _new = new listNode();
+    listNode* temp = head;
+    _new->data = data;
+    _new->next = NULL;
+    if (!head || !position) {
+        _new->next = head;
+        return _new;
     }
+    for (int i = 0; i < (position-1); ++i) {
+        temp = temp->next;
+    }
+    _new->next = temp->next;
+    temp->next = _new;
+    return head;
+}
+
+listNode* MergeLists(listNode *headA, listNode* headB) {
+    if (!headA)
+        return headB;
+    if (!headB)
+        return headA;
+    listNode* headNew = NULL, *iterA = headA, *iterB = headB, *iterNew = NULL;
+    if (iterA->data < iterB->data) {
+        headNew = iterA;
+        iterA = iterA->next;
+    } else {
+        headNew = iterB;
+        iterB = iterB->next;
+    }
+    iterNew = headNew;
+    while (iterA && iterB) {
+        if (iterA->data < iterB->data) {
+            iterNew->next = iterA;
+            iterNew = iterNew->next;
+            iterA = iterA->next;
+        } else {
+            iterNew->next = iterB;
+            iterNew = iterNew->next;
+            iterB = iterB->next;
+        }
+    }
+    if (iterA)
+        iterNew->next = iterA;
+    else if (iterB)
+        iterNew->next = iterB;
+    return headNew;
+}
+
+// insert-a-node-into-a-sorted-doubly-linked-list
+dListNode* SortedInsert(dListNode *head, int data) {
+    dListNode* temp = new dListNode;
+    temp->data = data;
+    temp->next = temp->prev = NULL;
+    if (!head)
+        return temp;
+    if (data < head->data) {
+        temp->next = head;
+        head->prev = temp;
+        return temp;
+    }
+    dListNode* marker = head;
+    while (marker->next && (marker->next->data < data))
+        marker = marker->next;
+    temp->prev = marker;
+    temp->next = marker->next;
+    if (marker->next)
+        marker->next->prev = temp;
+    marker->next = temp;
+    return head;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    // listNode *headA = NULL;
+    // while(true) {
+    //     int x;
+    //     cin>>x;
+    //     if (-1 == x)
+    //         break;
+    //     headA = Push(headA,x);
+    // }
+    dListNode *headA = NULL, *tail = NULL;
+    while (true) {
+        int x=0;
+        cin >> x;
+        if (-1 == x)
+            break;
+        dListNode *temp = new dListNode;
+        temp->data = x;
+        temp->next = NULL;
+        temp->prev = NULL;
+        if (!headA) {
+            headA = tail = temp;
+            continue;
+        }
+        tail->next = temp;
+        temp->prev = tail;
+        tail = tail->next;
+    }
+    Print(headA);
+    headA = SortedInsert(headA, 50);
+    Print(headA);
+    headA = SortedInsert(headA, 40);
+    Print(headA);
+    headA = SortedInsert(headA, 30);
+    Print(headA);
+    headA = SortedInsert(headA, 20);
+    Print(headA);
+    headA = SortedInsert(headA, 10);
+    Print(headA);
+    headA = SortedInsert(headA, 60);
+    Print(headA);
+    headA = SortedInsert(headA, 70);
+    Print(headA);
+    headA = SortedInsert(headA, 80);
+    Print(headA);
+    cout << flush;
+    return 0;
 }
