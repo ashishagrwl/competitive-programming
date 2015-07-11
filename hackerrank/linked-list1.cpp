@@ -297,6 +297,22 @@ dListNode* SortedInsert(dListNode *head, int data) {
     return head;
 }
 
+// reverse-a-doubly-linked-list
+dListNode* Reverse(dListNode* head) {
+    if (!head)
+        return NULL;
+    dListNode* temp = head, *temp2=NULL;
+    while (true) {
+        temp2 = temp->next;
+        temp->next = temp->prev;
+        temp->prev = temp2;
+        if (!temp->prev)
+            break;
+        temp = temp->prev;
+    }
+    return temp;
+}
+
 int main() {
     ios_base::sync_with_stdio(false);
     // listNode *headA = NULL;
@@ -326,21 +342,7 @@ int main() {
         tail = tail->next;
     }
     Print(headA);
-    headA = SortedInsert(headA, 50);
-    Print(headA);
-    headA = SortedInsert(headA, 40);
-    Print(headA);
-    headA = SortedInsert(headA, 30);
-    Print(headA);
-    headA = SortedInsert(headA, 20);
-    Print(headA);
-    headA = SortedInsert(headA, 10);
-    Print(headA);
-    headA = SortedInsert(headA, 60);
-    Print(headA);
-    headA = SortedInsert(headA, 70);
-    Print(headA);
-    headA = SortedInsert(headA, 80);
+    headA = Reverse(headA);
     Print(headA);
     cout << flush;
     return 0;
